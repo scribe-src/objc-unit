@@ -2,7 +2,7 @@ CC=gcc
 BUILD_DIR=./build
 SRC_DIR=./src
 TEST_OUT=$(BUILD_DIR)/test.out
-FRAMEWORKS=-framework Cocoa
+FRAMEWORKS=-framework Foundation
 CFLAGS=$(FRAMEWORKS)
 
 .PHONY: test

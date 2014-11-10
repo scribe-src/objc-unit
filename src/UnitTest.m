@@ -1,5 +1,4 @@
 #import "UnitTest.h"
-#import <Cocoa/Cocoa.h>
 
 //
 // Unit test helpers
@@ -363,9 +362,6 @@ unsigned int RunTests(id klass) {
 
 int main() {
   NSAutoreleasePool *pool = [NSAutoreleasePool new];
-
-  NSApplication *app = [NSApplication sharedApplication];
-  [app setActivationPolicy: NSApplicationActivationPolicyRegular];
 
   InstallSignalHandlers();
 
