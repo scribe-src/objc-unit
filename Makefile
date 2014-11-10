@@ -1,9 +1,16 @@
 CC=gcc
+
 BUILD_DIR=./build
 SRC_DIR=./src
+TEST_DIR=./test
+
+TEST_FILES=$(SRC_DIR)/**.m $(TEST_DIR)/**.m
 TEST_OUT=$(BUILD_DIR)/test.out
+
+INCLUDES=-I$(SRC_DIR)
 FRAMEWORKS=-framework Foundation
-CFLAGS=$(FRAMEWORKS)
+
+CFLAGS=$(FRAMEWORKS) $(INCLUDES)
 
 .PHONY: test
 
@@ -12,5 +19,5 @@ clean:
 
 test:
 	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -I$(SRC_DIR) $(SRC_DIR)/**.m test/**.m -o $(TEST_OUT)
+	$(CC) $(CFLAGS) $(TEST_FILES) -o $(TEST_OUT)
 	$(TEST_OUT)

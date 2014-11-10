@@ -51,7 +51,7 @@ void AssertIntEqual(int a, int b) {
 }
 
 void AssertStrEqual(char* a, char* b) {
-  if (!strcmp((const char*)a, (const char*)b)) {
+  if (strcmp((const char*)a, (const char*)b)) {
     [NSException raise:@"False Assertion" format:
       @"Expected %s to equal %s.", a, b, nil
     ];
@@ -86,7 +86,7 @@ void AssertIntNotEqual(int a, int b) {
 
 
 void AssertStrNotEqual(void* a, void* b) {
-  if (strcmp((const char*)a, (const char*)b)) {
+  if (!strcmp((const char*)a, (const char*)b)) {
     [NSException raise:@"False Assertion" format:
       @"Expected %s not to equal %s.", a, b, nil
     ];
