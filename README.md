@@ -4,13 +4,15 @@ The `objc-unit` module implements a tiny, DRY unit testing framework built to te
 
 #### How does it work?
 
-Test suites are simply defined as subclasses of `UnitTest`, with each test implemented as a separate class method. The Objective-C runtime is queried for a list of subclasses of `UnitTest`, and the class methods of the subclasses are called one-by-one.
+Test suites are simply defined as subclasses of `TestSuite`, with each test implemented as a separate class method. The Objective-C runtime is queried for a list of subclasses of `TestSuite`, and the class methods of the subclasses are called one-by-one.
 
 #### Usage
 
 A set of macros is provided for a minimal definition style:
 
     // AppDelegateTests.m
+
+    #import "UnitTest.h"
 
     TEST_SUITE(AppDelegateTests)
 
@@ -32,7 +34,11 @@ A set of macros is provided for a minimal definition style:
 
 You can also define your test suites directly in Objective-C (this might be helpful to your syntax highlighter):
 
-    @interface AppDelegateTests: UnitTest
+    // AppDelegateTests.m
+
+    #import "UnitTest.h"
+
+    @interface AppDelegateTests: TestSuite
     @end
 
     @implementation AppDelegateTests
