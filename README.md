@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/scribe-src/objc-unit.svg?branch=master)](https://travis-ci.org/scribe-src/objc-unit)
+
 ### objc-unit
 
 The `objc-unit` module implements a tiny, DRY unit testing framework built to test small OSX applications. It consists of one `.m` file and one `.h` file: simply drop it in to your project, add the files to your test target, define some specs, compile and run!
