@@ -392,7 +392,7 @@ int main() {
   }
 
   Print(@"\n");
-  exit(0);
+  exit(testsRan - testsPassed);
 
   [pool drain];
 
