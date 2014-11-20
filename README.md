@@ -98,8 +98,8 @@ Several assertion helpers are provided:
     void AssertObjNotEqual(id a, id b);
     void AssertInstanceOfClass(id instance, Class klass);
 
-#### Filtering tests
+#### Filtering test suites
 
-The tests can be filtered at runtime using the `MATCH` environment variable. To only run tests that match the regular expression "FluxCapacitor":
+The test suites can be filtered at runtime using the `MATCH` environment variable. To only run test suites that match the regular expression "FluxCapacitor":
 
     $ MATCH=FluxCapacitor make test
