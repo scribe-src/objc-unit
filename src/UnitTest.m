@@ -132,7 +132,7 @@ void AssertInstanceOfClass(id instance, Class klass) {
 
 @implementation TestSuite
 - (void) suiteInitialize {}
-- (BOOL) shouldFork { return YES; }
+- (BOOL) shouldFork { return NO; }
 @end
 
 
@@ -241,14 +241,7 @@ void SignalHandler(int sig) {
 
   [backtraceStr insertString: signal atIndex: 0];
 
-// #ifdef FORK_TESTS
   ReportException(backtraceStr);
-// #else
-//   Print(@"\n");
-//   for (int i = 1; i < frames; i++) {
-//     PrintBad([NSString stringWithFormat:@"%s\n", syms[i]]);
-//   }
-// #endif
 
   [pool drain];
   exit(1);
@@ -360,6 +353,15 @@ unsigned int RunTests(id klass) {
   return numPassed;
 }
 
+BOOL matches(NSString *klassName) {
+  if (getenv("MATCH")) {
+    NSString *regex = [NSString stringWithCString: getenv("MATCH") encoding: NSUTF8StringEncoding];
+    return ([klassName rangeOfString: regex options: NSRegularExpressionSearch].location != NSNotFound);
+  } else {
+    return YES;
+  }
+}
+
 int main() {
   NSAutoreleasePool *pool = [NSAutoreleasePool new];
 
@@ -368,10 +370,13 @@ int main() {
   failingTests = [NSMutableArray new];
   NSArray *classes = ClassGetSubclasses([TestSuite class]);
   for (id klass in classes) {
-    Print(@"\nRunning test suite ");
-    PrintBold(NSStringFromClass(klass));
-    Print(@"\n");
-    RunTests(klass);
+    NSString *klassName = NSStringFromClass(klass);
+    if (matches(klassName)) {
+      Print(@"\nRunning test suite ");
+      PrintBold(klassName);
+      Print(@"\n");
+      RunTests(klass);
+    }
   }
 
   Print(@"\n=====================================================\n");
