@@ -18,8 +18,6 @@ A set of macros is provided for a minimal definition style:
 
     TEST_SUITE(AppDelegateTests)
 
-    FORK(NO)
-
     TEST(MissingPlistFile)
       @try {
         AppDelegate *appDelegate = [[AppDelegate new] autorelease];
@@ -99,3 +97,9 @@ Several assertion helpers are provided:
     void AssertStrNotEqual(void* a, void* b);
     void AssertObjNotEqual(id a, id b);
     void AssertInstanceOfClass(id instance, Class klass);
+
+#### Filtering tests
+
+The tests can be filtered at runtime using the `MATCH` environment variable. To only run tests that match the regular expression "FluxCapacitor":
+
+    $ MATCH=FluxCapacitor make test
