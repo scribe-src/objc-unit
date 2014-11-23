@@ -4,6 +4,7 @@
 // Unit test helpers
 //
 
+int $seed;
 unsigned int testsRan = 0;
 unsigned int testsPassed = 0;
 NSPipe *exceptionPipe;
@@ -267,10 +268,19 @@ unsigned int RunTests(id klass) {
 
   unsigned int numMethods = 0;
   unsigned int numPassed  = 0;
-  Method *methods = class_copyMethodList(object_getClass(klass), &numMethods);
-
+  Method *methodsArr = class_copyMethodList(object_getClass(klass), &numMethods);
+  NSMutableArray *methods = [[NSMutableArray new] autorelease];
   for (unsigned int i = 0; i < numMethods; i++) {
-    Method m = methods[i];
+    id value = [NSValue value: &methodsArr[i] withObjCType: @encode(Method)];
+    [methods addObject: value];
+  }
+
+  while ([methods count] > 0) {
+    int randIdx = random()%[methods count];
+    Method m;
+    [[methods objectAtIndex: randIdx] getValue: &m];
+    [methods removeObjectAtIndex: randIdx];
+
     struct objc_method_description *m_desc = method_getDescription(m);
 
     Print(@"  Running ");
@@ -353,8 +363,23 @@ unsigned int RunTests(id klass) {
   return numPassed;
 }
 
+void HandleSeed() {
+  char* seedStr = getenv("SEED");
+  if (seedStr && strlen(seedStr)) {
+    $seed = (int)strtol(seedStr, NULL, 16);
+  } else {
+    srandom(time(NULL));
+    $seed = random();
+  }
+  srandom($seed);
+  printf("Running with seed ");
+  PrintGood([NSString stringWithFormat: @"%X", $seed]);
+  printf("\n");
+}
+
 BOOL matches(NSString *klassName) {
-  if (getenv("MATCH")) {
+  char* match = getenv("MATCH");
+  if (match && strlen(match)) {
     NSString *regex = [NSString stringWithCString: getenv("MATCH") encoding: NSUTF8StringEncoding];
     return ([klassName rangeOfString: regex options: NSRegularExpressionSearch].location != NSNotFound);
   } else {
@@ -366,10 +391,15 @@ int main() {
   NSAutoreleasePool *pool = [NSAutoreleasePool new];
 
   InstallSignalHandlers();
+  HandleSeed();
 
   failingTests = [NSMutableArray new];
-  NSArray *classes = ClassGetSubclasses([TestSuite class]);
-  for (id klass in classes) {
+  NSMutableArray *classes = [[ClassGetSubclasses([TestSuite class]) mutableCopy] autorelease];
+
+  while ([classes count] > 0) {
+    int randIdx = random()%[classes count];
+    id klass = [classes objectAtIndex: randIdx];
+    [classes removeObjectAtIndex: randIdx];
     NSString *klassName = NSStringFromClass(klass);
     if (matches(klassName)) {
       Print(@"\nRunning test suite ");
@@ -396,7 +426,7 @@ int main() {
     }
   }
 
-  Print(@"\n");
+  Print([NSString stringWithFormat: @"\nSeed: %X\n\n", $seed]);
   exit(testsRan - testsPassed);
 
   [pool drain];
