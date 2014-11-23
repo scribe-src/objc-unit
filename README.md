@@ -6,7 +6,7 @@ The `objc-unit` module implements a tiny, minimal unit testing framework built t
 
 #### How does it work?
 
-Test suites are simply defined as subclasses of `TestSuite`, with each test implemented as a separate class method. The Objective-C runtime is queried for a list of subclasses of `TestSuite`, and the class methods of the subclasses are called one-by-one.
+Test suites are simply defined as subclasses of the `TestSuite` class, with each test implemented as a separate class method. The Objective-C runtime is queried for a list of subclasses of `TestSuite`, and the class methods of the subclasses are called one-by-one.
 
 #### Usage
 

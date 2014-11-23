@@ -5,6 +5,8 @@
 //
 
 int $seed;
+NSString *$currentTest;
+NSString *$currentSuite;
 unsigned int testsRan = 0;
 unsigned int testsPassed = 0;
 NSPipe *exceptionPipe;
@@ -288,6 +290,8 @@ unsigned int RunTests(id klass) {
     Print(@"... ");
     fflush(stdout);
 
+    $currentTest = NSStringFromSelector(m_desc->name);
+
     BOOL passed = true;
     NSException *failure = nil;
     NSString *failureMessage = nil;
@@ -357,6 +361,7 @@ unsigned int RunTests(id klass) {
       [failingTests addObject: bottomFormat];
     }
 
+    $currentTest = NULL;
     Print(@"\n");
   }
 
@@ -401,12 +406,14 @@ int main() {
     id klass = [classes objectAtIndex: randIdx];
     [classes removeObjectAtIndex: randIdx];
     NSString *klassName = NSStringFromClass(klass);
+    $currentSuite = klassName;
     if (matches(klassName)) {
       Print(@"\nRunning test suite ");
       PrintBold(klassName);
       Print(@"\n");
       RunTests(klass);
     }
+    $currentSuite = NULL;
   }
 
   Print(@"\n=====================================================\n");
