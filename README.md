@@ -103,3 +103,15 @@ Several assertion helpers are provided:
 The test suites can be filtered at runtime using the `MATCH` environment variable. To only run test suites that match the regular expression "FluxCapacitor":
 
     $ MATCH=FluxCapacitor make test
+
+#### Seeding the test case randomizer
+
+By default the order of test suites and cases is randomized. After a run ends, its unique "seed" value will be printed:
+
+    =====================================================
+    Tests complete: SUCCESSFUL. 17/17 passed.
+    Seed: 2EDE34DE
+
+To replicate the order of tests across multiple runs, you must pass the `SEED` environment variable.
+
+    $ SEED=2EDE34DE make test
