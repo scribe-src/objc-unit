@@ -259,7 +259,7 @@ void SignalHandler(int sig) {
 
   PrintBad([NSString stringWithFormat: @"Signal caught:\n%@", backtraceStr]);
   [pool drain];
-  // exit(1);
+  exit(1);
 }
 
 void InstallSignalHandlers() {
