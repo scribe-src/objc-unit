@@ -253,10 +253,12 @@ void SignalHandler(int sig) {
 
   [backtraceStr insertString: signal atIndex: 0];
 
-  ReportException(backtraceStr);
+  // if FORKING
+  // ReportException(backtraceStr);
+  // else
 
+  PrintBad([NSString stringWithFormat: @"Signal caught:\n%@", backtraceStr].UTF8String);
   [pool drain];
-  exit(1);
 }
 
 void InstallSignalHandlers() {
