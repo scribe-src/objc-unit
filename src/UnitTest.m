@@ -238,6 +238,15 @@ void SignalHandler(int sig) {
     case SIGTERM:
       signal = @"SIGTERM\n";
       break;
+    case SIGTRAP:
+      signal = @"SIGTRAP\n";
+      break;
+    case SIGBUS:
+      signal = @"SIGBUS\n";
+      break;
+    case SIGPIPE:
+      signal = @"SIGPIPE\n";
+      break;
     default:
       signal = @"UNKNOWN\n";
   }
@@ -257,6 +266,9 @@ void InstallSignalHandlers() {
   signal(SIGINT,  SignalHandler);
   signal(SIGSEGV, SignalHandler);
   signal(SIGTERM, SignalHandler);
+  signal(SIGTRAP, SignalHandler);
+  signal(SIGBUS, SignalHandler);
+  signal(SIGPIPE, SignalHandler);
 }
 
 unsigned int RunTests(id klass) {
