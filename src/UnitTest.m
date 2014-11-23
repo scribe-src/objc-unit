@@ -139,6 +139,17 @@ void AssertInstanceOfClass(id instance, Class klass) {
 @end
 
 
+BOOL matches(NSString *klassName, char* envVar) {
+  char* match = getenv(envVar);
+  if (match && strlen(match)) {
+    NSString *regex = [NSString stringWithCString: match encoding: NSUTF8StringEncoding];
+    return ([klassName rangeOfString: regex options: NSRegularExpressionSearch].location != NSNotFound);
+  } else {
+    return YES;
+  }
+}
+
+
 NSArray *ClassGetSubclasses(Class parentClass) {
   int numClasses = objc_getClassList(NULL, 0);
   Class *classes = NULL;
@@ -299,13 +310,18 @@ unsigned int RunTests(id klass) {
     [methods removeObjectAtIndex: randIdx];
 
     struct objc_method_description *m_desc = method_getDescription(m);
+    $currentTest = NSStringFromSelector(m_desc->name);
+
+    if (!matches($currentTest, "TEST_MATCH")) {
+      continue;
+    }
 
     Print(@"  Running ");
-    PrintBold(NSStringFromSelector(m_desc->name));
+    PrintBold($currentTest);
     Print(@"... ");
     fflush(stdout);
 
-    $currentTest = NSStringFromSelector(m_desc->name);
+    
 
     BOOL passed = true;
     NSException *failure = nil;
@@ -397,16 +413,6 @@ void HandleSeed() {
   printf("\n");
 }
 
-BOOL matches(NSString *klassName) {
-  char* match = getenv("MATCH");
-  if (match && strlen(match)) {
-    NSString *regex = [NSString stringWithCString: getenv("MATCH") encoding: NSUTF8StringEncoding];
-    return ([klassName rangeOfString: regex options: NSRegularExpressionSearch].location != NSNotFound);
-  } else {
-    return YES;
-  }
-}
-
 int main() {
   NSAutoreleasePool *pool = [NSAutoreleasePool new];
 
@@ -422,7 +428,7 @@ int main() {
     [classes removeObjectAtIndex: randIdx];
     NSString *klassName = NSStringFromClass(klass);
     $currentSuite = klassName;
-    if (matches(klassName)) {
+    if (matches(klassName, "MATCH")) {
       Print(@"\nRunning test suite ");
       PrintBold(klassName);
       Print(@"\n");
