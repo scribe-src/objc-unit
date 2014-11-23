@@ -257,8 +257,9 @@ void SignalHandler(int sig) {
   // ReportException(backtraceStr);
   // else
 
-  PrintBad([NSString stringWithFormat: @"Signal caught:\n%@", backtraceStr].UTF8String);
+  PrintBad([NSString stringWithFormat: @"Signal caught:\n%@", backtraceStr]);
   [pool drain];
+  // exit(1);
 }
 
 void InstallSignalHandlers() {
